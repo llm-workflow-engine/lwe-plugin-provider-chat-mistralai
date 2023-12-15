@@ -45,15 +45,6 @@ class ProviderChatMistralai(Provider):
     def llm_factory(self):
         return ChatMistralAI
 
-    def make_llm(self, customizations=None, use_defaults=False):
-        customizations = customizations or {}
-        final_customizations = self.get_customizations()
-        final_customizations.update(customizations)
-        for customization in self.customization_config().keys():
-            if customization in final_customizations and final_customizations[customization] is None:
-                del final_customizations[customization]
-        return super().make_llm(final_customizations, use_defaults)
-
     def customization_config(self):
         return {
             'mistral_api_key': PresetValue(str, include_none=True, private=True),
