@@ -8,6 +8,14 @@ from lwe.core.provider import Provider, PresetValue
 MISTRAL_AI_DEFAULT_MODEL = "mistral-small"
 
 
+class CustomChatMistralAI(ChatMistralAI):
+
+    @property
+    def _llm_type(self):
+        """Return type of llm."""
+        return "chat_mistralai"
+
+
 class ProviderChatMistralai(Provider):
     """
     Access to chat Anthropic models
@@ -43,7 +51,7 @@ class ProviderChatMistralai(Provider):
         return self.prepare_messages_for_llm_chat
 
     def llm_factory(self):
-        return ChatMistralAI
+        return CustomChatMistralAI
 
     def customization_config(self):
         return {
