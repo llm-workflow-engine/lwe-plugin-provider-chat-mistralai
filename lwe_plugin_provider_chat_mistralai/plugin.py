@@ -1,7 +1,4 @@
-# TODO: Fix this and remove mistralai.py when
-# https://github.com/langchain-ai/langchain/pull/14775 lands.
-# from langchain.chat_models.mistralai import ChatMistralAI
-from lwe_plugin_provider_chat_mistralai.mistralai import ChatMistralAI
+from langchain_mistralai.chat_models import ChatMistralAI
 
 from lwe.core.provider import Provider, PresetValue
 
