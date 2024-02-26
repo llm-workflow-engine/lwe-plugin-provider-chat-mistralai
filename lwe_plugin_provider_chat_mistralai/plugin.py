@@ -28,13 +28,28 @@ class ProviderChatMistralai(Provider):
             "chat": True,
             'validate_models': True,
             'models': {
+                'open-mistral-7b': {
+                    'max_tokens': 32768,
+                },
+                'open-mixtral-8x7b': {
+                    'max_tokens': 32768,
+                },
                 'mistral-tiny': {
                     'max_tokens': 32768,
                 },
                 'mistral-small': {
                     'max_tokens': 32768,
                 },
+                'mistral-small-latest': {
+                    'max_tokens': 32768,
+                },
                 'mistral-medium': {
+                    'max_tokens': 32768,
+                },
+                'mistral-medium-latest': {
+                    'max_tokens': 32768,
+                },
+                'mistral-large-latest': {
                     'max_tokens': 32768,
                 },
             },
