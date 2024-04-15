@@ -15,7 +15,7 @@ class CustomChatMistralAI(ChatMistralAI):
 
 class ProviderChatMistralai(Provider):
     """
-    Access to chat Anthropic models
+    Access to chat MistralAI models
     """
 
     @property
