@@ -34,6 +34,9 @@ class ProviderChatMistralai(Provider):
                 'open-mixtral-8x7b': {
                     'max_tokens': 32768,
                 },
+                'open-mixtral-8x22b': {
+                    'max_tokens': 32768,
+                },
                 'mistral-tiny': {
                     'max_tokens': 32768,
                 },
