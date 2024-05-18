@@ -68,6 +68,13 @@ class ProviderChatMistralai(Provider):
     def llm_factory(self):
         return CustomChatMistralAI
 
+    # TODO: Remove this when https://github.com/mistralai/client-python/issues/91 is resolved
+    def transform_tool(self, tool):
+        import copy
+        tool = copy.deepcopy(tool)
+        del tool['required']
+        return tool
+
     def customization_config(self):
         return {
             'mistral_api_key': PresetValue(str, include_none=True, private=True),
@@ -81,4 +88,6 @@ class ProviderChatMistralai(Provider):
             'top_p': PresetValue(float, min_value=0.0, max_value=1.0, include_none=True),
             'random_seed': PresetValue(int, include_none=True),
             'safe_mode': PresetValue(bool, include_none=True),
+            "tools": None,
+            "tool_choice": None,
         }
