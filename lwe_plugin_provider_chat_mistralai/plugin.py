@@ -68,13 +68,6 @@ class ProviderChatMistralai(Provider):
     def llm_factory(self):
         return CustomChatMistralAI
 
-    # TODO: Remove this when https://github.com/mistralai/client-python/issues/91 is resolved
-    def transform_tool(self, tool):
-        import copy
-        tool = copy.deepcopy(tool)
-        del tool['required']
-        return tool
-
     def customization_config(self):
         return {
             'mistral_api_key': PresetValue(str, include_none=True, private=True),
