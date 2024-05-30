@@ -55,6 +55,9 @@ class ProviderChatMistralai(Provider):
                 'mistral-large-latest': {
                     'max_tokens': 32768,
                 },
+                'codestral-latest': {
+                    'max_tokens': 32768,
+                },
             },
         }
 
