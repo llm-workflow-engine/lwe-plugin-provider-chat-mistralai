@@ -35,6 +35,9 @@ class ProviderChatMistralai(Provider):
 
     @property
     def static_models(self):
+        """To get the latest list of models:
+        curl -X GET "https://api.mistral.ai/v1/models" -H "Authorization: Bearer $MISTRAL_API_KEY" -H "Content-Type: application/json" | jq
+        """
         return {
             'open-mistral-7b': {
                 'max_tokens': 32768,
