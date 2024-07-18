@@ -66,6 +66,12 @@ class ProviderChatMistralai(Provider):
             'codestral-latest': {
                 'max_tokens': 32768,
             },
+            'open-codestral-mamba': {
+                'max_tokens': 262144,
+            },
+            'open-mistral-nemo': {
+                'max_tokens': 131072,
+            },
         }
 
     def prepare_messages_method(self):
