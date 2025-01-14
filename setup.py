@@ -7,10 +7,10 @@ FILE_DIR = path.dirname(path.abspath(path.realpath(__file__)))
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     install_requirement = f.readlines()
 
-with open(path.join(FILE_DIR, 'lwe_plugin_provider_chat_mistralai', 'version.py')) as f:
+with open(path.join(FILE_DIR, "lwe_plugin_provider_chat_mistralai", "version.py")) as f:
     version = re.match(r'^__version__ = "([\w\.]+)"$', f.read().strip())[1]
 
 setup(
