@@ -1,8 +1,12 @@
+import os
+import requests
+
 from langchain_mistralai.chat_models import ChatMistralAI
 
 from lwe.core.provider import Provider, PresetValue
 
 MISTRAL_AI_DEFAULT_MODEL = "mistral-small"
+MISTRAL_AI_API_BASE = "https://api.mistral.ai/v1"
 
 
 class CustomChatMistralAI(ChatMistralAI):
@@ -33,49 +37,24 @@ class ProviderChatMistralai(Provider):
     def default_model(self):
         return MISTRAL_AI_DEFAULT_MODEL
 
-    @property
-    def static_models(self):
-        """To get the latest list of models:
-        curl -X GET "https://api.mistral.ai/v1/models" -H "Authorization: Bearer $MISTRAL_API_KEY" -H "Content-Type: application/json" | jq
-        """
-        return {
-            'open-mistral-7b': {
-                'max_tokens': 32768,
-            },
-            'open-mixtral-8x7b': {
-                'max_tokens': 32768,
-            },
-            'open-mixtral-8x22b': {
-                'max_tokens': 65536,
-            },
-            'mistral-tiny': {
-                'max_tokens': 32768,
-            },
-            'mistral-small': {
-                'max_tokens': 32768,
-            },
-            'mistral-small-latest': {
-                'max_tokens': 32768,
-            },
-            'mistral-medium': {
-                'max_tokens': 32768,
-            },
-            'mistral-medium-latest': {
-                'max_tokens': 32768,
-            },
-            'mistral-large-latest': {
-                'max_tokens': 131072,
-            },
-            'codestral-latest': {
-                'max_tokens': 32768,
-            },
-            'open-codestral-mamba': {
-                'max_tokens': 262144,
-            },
-            'open-mistral-nemo': {
-                'max_tokens': 131072,
-            },
-        }
+    def fetch_models(self):
+        models_url = f"{MISTRAL_AI_API_BASE}/models"
+        try:
+            headers = {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {os.environ['MISTRAL_API_KEY']}",
+            }
+            response = requests.get(models_url, headers=headers)
+            response.raise_for_status()
+            models_data = response.json()
+            models_list = models_data.get('data')
+            if not models_list:
+                raise ValueError('Could not retrieve models')
+            models = {model['id']: {'max_tokens': model['max_context_length']} for model in models_list if 'max_context_length' in model and model['max_context_length'] and 'capabilities' in model and 'completion_chat' in model['capabilities'] and model['capabilities']['completion_chat']}
+            return models
+        except requests.exceptions.RequestException as e:
+            raise ValueError(f"Could not retrieve models: {e}")
 
     def prepare_messages_method(self):
         return self.prepare_messages_for_llm_chat
