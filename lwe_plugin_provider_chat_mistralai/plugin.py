@@ -1,9 +1,17 @@
+"""LWE chat mistralai provider integration."""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from typing import Any
 import os
+
+from langchain_core.messages import BaseMessage
+from langchain_mistralai.chat_models import ChatMistralAI
+from typing_extensions import override
 import requests
 
-from langchain_mistralai.chat_models import ChatMistralAI
-
-from lwe.core.provider import Provider, PresetValue
+from lwe.core.provider import PresetValue, Provider
 
 MISTRAL_AI_DEFAULT_MODEL = "mistral-small"
 MISTRAL_AI_API_BASE = "https://api.mistral.ai/v1"
@@ -12,7 +20,8 @@ MISTRAL_AI_API_BASE = "https://api.mistral.ai/v1"
 class CustomChatMistralAI(ChatMistralAI):
 
     @property
-    def _llm_type(self):
+    @override
+    def _llm_type(self) -> str:
         """Return type of llm."""
         return "chat_mistralai"
 
@@ -23,21 +32,24 @@ class ProviderChatMistralai(Provider):
     """
 
     @property
-    def model_property_name(self):
+    @override
+    def model_property_name(self) -> str:
         return "model"
 
     @property
-    def capabilities(self):
+    @override
+    def capabilities(self) -> dict[str, bool]:
         return {
             "chat": True,
             "validate_models": True,
         }
 
     @property
-    def default_model(self):
+    @override
+    def default_model(self) -> str:
         return MISTRAL_AI_DEFAULT_MODEL
 
-    def fetch_models(self):
+    def fetch_models(self) -> dict[str, dict[str, int | None]]:
         models_url = f"{MISTRAL_AI_API_BASE}/models"
         try:
             headers = {
@@ -64,13 +76,18 @@ class ProviderChatMistralai(Provider):
         except requests.exceptions.RequestException as e:
             raise ValueError(f"Could not retrieve models: {e}")
 
-    def prepare_messages_method(self):
+    @override
+    def prepare_messages_method(
+        self,
+    ) -> Callable[[list[dict[str, Any]]], list[BaseMessage]]:
         return self.prepare_messages_for_llm_chat
 
-    def llm_factory(self):
+    @override
+    def llm_factory(self) -> type[CustomChatMistralAI]:
         return CustomChatMistralAI
 
-    def customization_config(self):
+    @override
+    def customization_config(self) -> dict[str, Any]:
         return {
             "mistral_api_key": PresetValue(str, include_none=True, private=True),
             "endpoint": PresetValue(str, include_none=True),
